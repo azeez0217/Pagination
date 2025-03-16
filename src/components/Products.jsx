@@ -9,14 +9,14 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 5;
-
+console.log(search)
   useEffect(() => {
     fetchingProductsData();
   }, []);
 
   useEffect(() => {
     applyFilter();
-  }, [currentpage, categories]);
+  }, [currentpage, categories,search]);
 
   const fetchingProductsData = async () => {
     const response = await axios.get(`https://dummyjson.com/products`);
@@ -41,11 +41,18 @@ const Products = () => {
         categories.includes(product.category)
       );
     }
-    if (search.length > 0) {
-      filtered = products.filter((prod) =>
-        prod.title.toLowerCase().includes(search)
-      );
-    }
+    if (categories.length > 0) {
+        const product = products.filter((prod, i) =>
+          categories.includes(prod.category)
+        );
+        filtered = product.filter((prod) =>
+          prod.title.toLowerCase().includes(search)
+        );
+      } else {
+        filtered = products.filter((prod) =>
+          prod.title.toLowerCase().includes(search)
+        );
+      }
 
     const startIndex = (currentpage - 1) * itemsPerPage;
     const PaginatedProducts = filtered.slice(
@@ -72,6 +79,7 @@ const Products = () => {
   const handleSearhChange = (e) => {
     debugger;
     const searchValue = e.target.value;
+    console.log(searchValue)
     setSearch(searchValue);
     let filtered = [];
     if (categories.length > 0) {
@@ -91,7 +99,7 @@ const Products = () => {
       startIndex,
       startIndex + itemsPerPage
     );
-
+    setCurentpage(1)
     setFilterdProducts(PaginatedProducts);
     setTotalPages(Math.ceil(filtered.length / itemsPerPage));
   };
@@ -137,7 +145,7 @@ const Products = () => {
         </ul>
       </div>
 
-      <div className="flex justify-center flex-wrap gap-4">
+      <div className="flex justify-center flex-wrap gap-4 h-[350px]">
         {filterProducts.map((prod, i) => (
           <div
             className="w-[18rem] shadow-md rounded-md cursor-pointer hover:border-blue-300 hover:shadow-md hover:shadow-blue-700 bg-white"
