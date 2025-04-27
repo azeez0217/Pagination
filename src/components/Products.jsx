@@ -9,14 +9,14 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 5;
-console.log(search)
+  console.log(search);
   useEffect(() => {
     fetchingProductsData();
   }, []);
 
   useEffect(() => {
     applyFilter();
-  }, [currentpage, categories,search]);
+  }, [currentpage, categories, search]);
 
   const fetchingProductsData = async () => {
     const response = await axios.get(`https://dummyjson.com/products`);
@@ -42,17 +42,17 @@ console.log(search)
       );
     }
     if (categories.length > 0) {
-        const product = products.filter((prod, i) =>
-          categories.includes(prod.category)
-        );
-        filtered = product.filter((prod) =>
-          prod.title.toLowerCase().includes(search)
-        );
-      } else {
-        filtered = products.filter((prod) =>
-          prod.title.toLowerCase().includes(search)
-        );
-      }
+      const product = products.filter((prod, i) =>
+        categories.includes(prod.category)
+      );
+      filtered = product.filter((prod) =>
+        prod.title.toLowerCase().includes(search)
+      );
+    } else {
+      filtered = products.filter((prod) =>
+        prod.title.toLowerCase().includes(search)
+      );
+    }
 
     const startIndex = (currentpage - 1) * itemsPerPage;
     const PaginatedProducts = filtered.slice(
@@ -79,7 +79,7 @@ console.log(search)
   const handleSearhChange = (e) => {
     debugger;
     const searchValue = e.target.value;
-    console.log(searchValue)
+    console.log(searchValue);
     setSearch(searchValue);
     let filtered = [];
     if (categories.length > 0) {
@@ -99,7 +99,7 @@ console.log(search)
       startIndex,
       startIndex + itemsPerPage
     );
-    setCurentpage(1)
+    setCurentpage(1);
     setFilterdProducts(PaginatedProducts);
     setTotalPages(Math.ceil(filtered.length / itemsPerPage));
   };
@@ -119,16 +119,16 @@ console.log(search)
           onChange={handleSearhChange}
         />
       </div>
-      <div className="flex flex-col space-y-2 text-center w-4xl bg-white mx-auto rounded-md shadow-md mb-3 p-3">
-        <ul className="flex gap-8 justify-center ">
+      <div className="flex flex-col space-y-4 text-center bg-white mx-auto rounded-md shadow-md mb-6 p-4 w-full sm:w-4/5 md:w-2/3">
+        <ul className="flex flex-wrap gap-4 justify-center">
           {["beauty", "fragrances", "furniture", "groceries"].map(
             (category, i) => (
               <label
-                className=" capitalize cursor-pointer flex gap-1"
+                className="capitalize cursor-pointer flex items-center gap-2"
                 htmlFor={category}
                 key={i}
               >
-                <li>
+                <li className="list-none">
                   <input
                     type="checkbox"
                     value={category}
@@ -144,8 +144,7 @@ console.log(search)
           )}
         </ul>
       </div>
-
-      <div className="flex justify-center flex-wrap gap-4 h-[350px]">
+      <div className="flex justify-center flex-wrap gap-4 ">
         {filterProducts.map((prod, i) => (
           <div
             className="w-[18rem] shadow-md rounded-md cursor-pointer hover:border-blue-300 hover:shadow-md hover:shadow-blue-700 bg-white"
@@ -162,13 +161,14 @@ console.log(search)
           </div>
         ))}
       </div>
-      <div className="mt-3 float-right pr-5">
-        <Pagination
-          currentpage={currentpage}
-          totalPages={totalPages}
-          upadateCurrentPage={upadateCurrentPage}
-        />
-      </div>
+      <div>
+      <button className="mt-4 flex justify-end pr-5 mb-0 w-full" type="button">
+  <Pagination
+    currentpage={currentpage}
+    totalPages={totalPages}
+    upadateCurrentPage={upadateCurrentPage}
+  />
+</button></div>
     </div>
   );
 };
